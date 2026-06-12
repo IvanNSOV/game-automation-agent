@@ -1,0 +1,36 @@
+# Core Vision & Detection
+ultralytics==8.0.215
+opencv-python==4.8.1.78
+numpy==1.24.3
+
+# Screen Capture
+bettercam==0.6.1
+mss==9.0.1
+
+# Input Simulation
+pydirectinput==1.9.9
+pyautogui==0.9.53
+
+# Configuration & Utilities
+PyYAML==6.0.1
+python-dotenv==1.0.0
+
+# Threading & Async
+threading-utils==0.2.0
+
+# Logging
+loguru==0.7.2
+
+# Visualization (Optional - for debug mode)
+matplotlib==3.7.4
+Pillow==10.0.1
+
+# Performance Monitoring
+psutil==5.9.5
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Type Hints
+typings==0.1.3

@@ -1,0 +1,205 @@
+# ============================================================================
+# AUTONOMOUS GAMEPLAY AGENT - CONFIGURATION FILE
+# ============================================================================
+# Adjust these settings to optimize for your system and game environment
+
+# Screen Capture Settings
+# ============================================================================
+capture:
+  # Bounding box position (left, top corners)
+  left: 400          # Left edge of capture area (pixels from screen left)
+  top: 300           # Top edge of capture area (pixels from screen top)
+  
+  # Bounding box dimensions
+  width: 800         # Width of capture area (pixels)
+  height: 600        # Height of capture area (pixels)
+  
+  # Capture performance
+  fps: 60            # Target capture FPS (higher = more responsive, more CPU)
+  use_bettercam: true # Use bettercam (recommended for DX11/DX12) vs mss
+  monitor_index: 0   # Which monitor to capture from (0=primary)
+
+# YOLOv8 Model Configuration
+# ============================================================================
+model:
+  # Model path - leave empty for auto-download YOLOv8n
+  # Options:
+  #   - "yolov8n.pt" (nano, fastest)
+  #   - "yolov8s.pt" (small, balanced)
+  #   - "yolov8m.pt" (medium, slower)
+  #   - "models/best.pt" (custom trained)
+  path: "yolov8n.pt"
+  
+  # Detection confidence threshold (0.0-1.0)
+  # Higher = fewer false positives but may miss targets
+  confidence: 0.5
+  
+  # IoU threshold for NMS (Non-Maximum Suppression)
+  iou: 0.45
+  
+  # Compute device
+  device: "cuda"     # "cuda" for NVIDIA GPU, "cpu" for CPU only
+  
+  # Model inference settings
+  half: true         # Use FP16 (faster, less VRAM) if supported
+  max_det: 10        # Max detections per frame
+
+# Targeting & Aiming Configuration
+# ============================================================================
+targeting:
+  # Head/torso aiming offset
+  # 0.0 = aim at bbox center, 0.2 = aim at upper 20% (head area)
+  head_offset: 0.2
+  
+  # Target distance constraints (pixels)
+  # Ignore targets outside this range
+  min_distance_px: 20
+  max_distance_px: 500
+  
+  # Prioritization algorithm
+  # "distance" = nearest target
+  # "center" = closest to screen center
+  # "size" = largest detection
+  priority: "distance"
+  
+  # Enable auto-leading (predict target movement)
+  # Not yet implemented - for future versions
+  lead_targets: false
+  lead_factor: 0.1
+
+# Input Humanization Settings
+# ============================================================================
+# These settings are CRITICAL for anti-cheat evasion
+humanization:
+  # Lerp smoothing factor (0.0-1.0)
+  # Controls interpolation speed between current and target position
+  # LOWER = smoother, more natural, harder to detect
+  # HIGHER = snappier, less natural, easier to detect
+  # Recommended: 0.15-0.25 for evasion, 0.5+ for development
+  smoothing_factor: 0.25
+  
+  # Random pixel offset (noise)
+  # Adds jitter to simulate hand tremor
+  # Range: ±random_noise_px pixels
+  random_noise_px: 3
+  
+  # Jitter frequency (0.0-1.0)
+  # Probability of applying micro-jitter each frame
+  jitter_frequency: 0.3
+  
+  # Minimum delay between movements (milliseconds)
+  # Simulates human reaction time
+  min_move_delay_ms: 10
+  
+  # Curve smoothing
+  # "linear" = straight line interpolation
+  # "ease_out" = starts fast, ends slow (natural deceleration)
+  # "bezier" = smooth cubic bezier curve
+  curve_type: "ease_out"
+
+# Input Simulation Method
+# ============================================================================
+input_simulation:
+  # Method for mouse control
+  # "win32" = Direct Win32 API (recommended for DX11/DX12 games)
+  # "pydirectinput" = PyDirectInput library
+  # "pyautogui" = PyAutoGUI (NOT recommended for most games)
+  method: "win32"
+  
+  # Mouse movement speed in pixels per frame
+  # This is modified by smoothing_factor
+  max_speed_px: 50
+  
+  # Enable mouse movement (safety toggle)
+  # Set to false to test detection without mouse movement
+  enable_movement: true
+  
+  # Enable mouse clicks (for future weapon firing)
+  enable_clicks: false
+  click_delay_ms: 50
+
+# Performance Optimization
+# ============================================================================
+performance:
+  # Skip N frames between detections
+  # 0 = detect every frame, 1 = every other frame, etc.
+  # Higher = better FPS but less responsive detection
+  detection_skip_frames: 0
+  
+  # Max frames to buffer before processing
+  frame_buffer_size: 5
+  
+  # Thread pool size for inference
+  num_workers: 2
+  
+  # Enable frame downscaling for inference
+  # Original resolution is captured but model runs on scaled version
+  enable_downscale: false
+  downscale_factor: 0.75
+
+# Debug & Visualization Settings
+# ============================================================================
+debug:
+  # Enable debug mode (slower but shows bounding boxes)
+  enabled: false
+  
+  # Show FPS counter
+  show_fps: true
+  
+  # Show detection bounding boxes
+  show_bboxes: true
+  
+  # Show targeting crosshairs
+  show_crosshairs: true
+  
+  # Show movement vectors
+  show_vectors: true
+  
+  # Log all mouse movements
+  log_movements: false
+  
+  # Save debug frames to disk
+  save_frames: false
+  save_frames_dir: "debug_frames"
+  
+  # Show statistics panel
+  show_stats: true
+
+# Logging Configuration
+# ============================================================================
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: "INFO"
+  
+  # Log file path (empty = console only)
+  file: "agent.log"
+  
+  # Rotation settings
+  rotation: "100 MB"
+  retention: "7 days"
+  
+  # Verbose output
+  verbose: false
+
+# Advanced Settings
+# ============================================================================
+advanced:
+  # Enable multi-threading for capture and inference
+  multithreading: true
+  
+  # Enable GPU memory optimization
+  gpu_optimization: true
+  
+  # Target FPS (0 = unlimited)
+  target_fps: 60
+  
+  # Watchdog timeout (seconds) - restart if frozen
+  watchdog_timeout: 30
+  
+  # Auto-calibrate screen center on startup
+  auto_calibrate: true
+  
+  # Emergency exit key
+  # Press this key to instantly stop the agent
+  # Common: 'q', 'esc', 'f1'
+  exit_key: "q"
